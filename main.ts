@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Camera = SpriteKind.create()
+}
 /**
  * start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
  */
@@ -18,6 +21,9 @@ function runTurn (whichPlayer: number) {
         dealerTurn()
     }
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    IntroEnd = true
+})
 // checks for who wings by seeing if each player's score is higher than everyone else's; if it is, that player wins
 // if it gets to the end and and it hasnt chosen somebody, then it says its a tie
 function endGameIfAtEnd () {
@@ -70,6 +76,29 @@ function roundCardForScoring (cardNum: number) {
         card = cardNum - 3
     }
 }
+function Intro () {
+    tiles.setCurrentTilemap(tilemap`IntroBG`)
+    CameraSprite = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Camera)
+    scene.cameraFollowSprite(CameraSprite)
+    CameraSprite.setVelocity(15, 15)
+}
 // scores the hand for the player
 function scoreHand () {
     // checks for which player, and then checks if the card is an ace. if yes, and an 11 would not cause the player to bust, it adds 11 to their score. otherwise, it adds the card's now rounded down score to their score. repeat this for each player and the dealer and you get this wall of if statemenets
@@ -115,6 +144,7 @@ function dealerTurn () {
     }
     timeToEndGame = true
 }
+let CameraSprite: Sprite = null
 let card = 0
 let whichSuit = 0
 let dealerScore = 0
@@ -130,6 +160,11 @@ let cardNumber3: number[] = []
 let cardNumber2: number[] = []
 let cardNumber1: number[] = []
 let suit: number[] = []
+let IntroEnd = false
+Intro()
+pauseUntil(() => IntroEnd)
+tiles.setCurrentTilemap(tilemap`BG`)
+pause(100)
 music.play(music.createSong(hex`00b6000408040105001c000f0a006400f4010a00000400000000000000000000000000000000027e0000000c00010d0c001000010d10001400011414001800010d18001c00010a1c002200010824002c0001082c003000011130003800011238004000010f40004c00010d4c005000010d50005400011454005800010d58005c00010a5c006200010864006c0001086c007400010c74007800010878007c00010c7c008000010f`), music.PlaybackMode.LoopingInBackground)
 // this WALL of arrays look intimidating, but in reality all it does it set up the array for suits, and then creates an array up to 13 for each suit
 suit = [

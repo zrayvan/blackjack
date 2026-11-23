@@ -6,11 +6,11 @@ function checkForBusts () {
     if (player1Score > 21) {
         player1Score = 0
         game.splash("Bust!")
-        endTurn = true
+        currentPlayerTurn += 1
     } else if (player2score > 21) {
         player2score = 0
         game.splash("Bust!")
-        endTurn = true
+        currentPlayerTurn += 1
     } else if (dealerScore > 21) {
         dealerScore = 0
         game.splash("Bust!")
@@ -18,7 +18,7 @@ function checkForBusts () {
     }
 }
 // start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
-function runTurn (whichPlayer: number) {
+function runTurn () {
     endTurn = false
     for (let index = 0; index < 2; index++) {
         drawCard()
@@ -28,13 +28,11 @@ function runTurn (whichPlayer: number) {
         if (game.ask("Hit (A) or Stand (B)?")) {
             drawCard()
             displayScore()
+            checkForBusts()
         } else {
             currentPlayerTurn += 1
             endTurn = true
         }
-    }
-    if (currentPlayerTurn == 3) {
-        dealerTurn()
     }
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -177,14 +175,18 @@ function dealerTurn () {
     }
     while (dealerScore < 17) {
         drawCard()
+        checkForBusts()
     }
+    game.splash("Dealer Score: " + dealerScore)
     timeToEndGame = true
 }
 function displayScore () {
     if (currentPlayerTurn == 1) {
         game.splash("P1 Score: " + player1Score)
     } else if (currentPlayerTurn == 2) {
-        game.splash("P2 Score: " + dealerScore)
+        game.splash("P2 Score: " + player2score)
+    } else {
+    	
     }
 }
 let TextIntro: Sprite = null
@@ -192,8 +194,8 @@ let Title: Sprite = null
 let CameraSprite: Sprite = null
 let card = 0
 let whichSuit = 0
-let timeToEndGame = false
 let endTurn = false
+let timeToEndGame = false
 let dealerScore = 0
 let player2score = 0
 let player1Score = 0
@@ -280,4 +282,8 @@ cardNumber4 = [
 currentPlayerTurn = 1
 forever(function () {
     endGameIfAtEnd()
+    runTurn()
+    if (currentPlayerTurn == 3) {
+        dealerTurn()
+    }
 })

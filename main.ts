@@ -17,7 +17,7 @@ function runTurn (whichPlayer: number) {
             endTurn = true
         }
     }
-    if (currentPlayerTurn == 5) {
+    if (currentPlayerTurn == 3) {
         dealerTurn()
     }
 }
@@ -29,19 +29,13 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 function endGameIfAtEnd () {
     if (timeToEndGame) {
         game.setGameOverEffect(true, effects.confetti)
-        if (player1Score > player2score && (player1Score > player3score && (player1Score > player4Score && player1Score > dealerScore))) {
+        if (player1Score > player2score && player1Score > dealerScore) {
             game.splash("Player 1 Wins!")
             game.gameOver(true)
-        } else if (player2score > player1Score && (player2score > player3score && (player2score > player4Score && player2score > dealerScore))) {
+        } else if (player2score > player1Score && player2score > dealerScore) {
             game.splash("Player 2 Wins!")
             game.gameOver(true)
-        } else if (player3score > player1Score && (player3score > player2score && (player3score > player4Score && player3score > dealerScore))) {
-            game.splash("Player 3 Wins!")
-            game.gameOver(true)
-        } else if (player4Score > player1Score && (player4Score > player2score && (player4Score > player3score && player4Score > dealerScore))) {
-            game.splash("Player 4 Wins!")
-            game.gameOver(true)
-        } else if (dealerScore > player1Score && (dealerScore > player2score && (dealerScore > player3score && dealerScore > player4Score))) {
+        } else if (dealerScore > player1Score && dealerScore > player2score) {
             game.splash("...The dealer won!", "Wow. That's pretty bad.")
             game.gameOver(false)
         } else {
@@ -114,18 +108,6 @@ function scoreHand () {
         } else {
             player2score = card + player2score
         }
-    } else if (currentPlayerTurn == 3) {
-        if (card == 1 && player3score < 10) {
-            player3score = 11 + player3score
-        } else {
-            player3score = card + player3score
-        }
-    } else if (currentPlayerTurn == 4) {
-        if (card == 1 && player4Score < 10) {
-            player4Score = 11 + player4Score
-        } else {
-            player4Score = card + player4Score
-        }
     } else {
         if (card == 1 && dealerScore < 10) {
             dealerScore = 11 + dealerScore
@@ -148,8 +130,6 @@ let CameraSprite: Sprite = null
 let card = 0
 let whichSuit = 0
 let dealerScore = 0
-let player4Score = 0
-let player3score = 0
 let player2score = 0
 let player1Score = 0
 let timeToEndGame = false

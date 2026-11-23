@@ -3,7 +3,8 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "multiplayer": "*"
+        "multiplayer": "*",
+        "Blacjack Extend W": "pub:92031-67894-30442-97840"
     },
     "files": [
         "main.blocks",

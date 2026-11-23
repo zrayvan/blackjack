@@ -84,7 +84,51 @@ function roundCardForScoring (cardNum: number) {
         card = cardNum - 3
     }
 }
-function Intro () {
+// scores the hand for the player
+function scoreHand () {
+    // checks for which player, and then checks if the card is an ace. if yes, and an 11 would not cause the player to bust, it adds 11 to their score. otherwise, it adds the card's now rounded down score to their score. repeat this for each player and the dealer and you get this wall of if statemenets
+    if (currentPlayerTurn == 1) {
+        if (card == 1 && player1Score < 10) {
+            player1Score = 11 + player1Score
+        } else {
+            player1Score = card + player1Score
+        }
+    } else if (currentPlayerTurn == 2) {
+        if (card == 1 && player2score < 10) {
+            player2score = 11 + player2score
+        } else {
+            player2score = card + player2score
+        }
+    } else {
+        if (card == 1 && dealerScore < 10) {
+            dealerScore = 11 + dealerScore
+        } else {
+            dealerScore = card + dealerScore
+        }
+    }
+}
+// dealer draws two at the start, then draws again if score is 16 or lower
+function dealerTurn () {
+    for (let index = 0; index < 2; index++) {
+        drawCard()
+    }
+    while (dealerScore < 17) {
+        drawCard()
+        checkForBusts()
+    }
+    game.splash("Dealer Score: " + dealerScore)
+    timeToEndGame = true
+}
+function displayScore () {
+    if (currentPlayerTurn == 1) {
+        game.splash("P1 Score: " + player1Score)
+    } else if (currentPlayerTurn == 2) {
+        game.splash("P2 Score: " + player2score)
+    } else {
+    	
+    }
+}
+function IntroFunc () {
     tiles.setCurrentTilemap(tilemap`TITLEBG`)
     CameraSprite = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -145,50 +189,6 @@ function Intro () {
         `, SpriteKind.Text)
     TextIntro.setVelocity(15, 15)
 }
-// scores the hand for the player
-function scoreHand () {
-    // checks for which player, and then checks if the card is an ace. if yes, and an 11 would not cause the player to bust, it adds 11 to their score. otherwise, it adds the card's now rounded down score to their score. repeat this for each player and the dealer and you get this wall of if statemenets
-    if (currentPlayerTurn == 1) {
-        if (card == 1 && player1Score < 10) {
-            player1Score = 11 + player1Score
-        } else {
-            player1Score = card + player1Score
-        }
-    } else if (currentPlayerTurn == 2) {
-        if (card == 1 && player2score < 10) {
-            player2score = 11 + player2score
-        } else {
-            player2score = card + player2score
-        }
-    } else {
-        if (card == 1 && dealerScore < 10) {
-            dealerScore = 11 + dealerScore
-        } else {
-            dealerScore = card + dealerScore
-        }
-    }
-}
-// dealer draws two at the start, then draws again if score is 16 or lower
-function dealerTurn () {
-    for (let index = 0; index < 2; index++) {
-        drawCard()
-    }
-    while (dealerScore < 17) {
-        drawCard()
-        checkForBusts()
-    }
-    game.splash("Dealer Score: " + dealerScore)
-    timeToEndGame = true
-}
-function displayScore () {
-    if (currentPlayerTurn == 1) {
-        game.splash("P1 Score: " + player1Score)
-    } else if (currentPlayerTurn == 2) {
-        game.splash("P2 Score: " + player2score)
-    } else {
-    	
-    }
-}
 let TextIntro: Sprite = null
 let Title: Sprite = null
 let CameraSprite: Sprite = null
@@ -206,7 +206,7 @@ let cardNumber2: number[] = []
 let cardNumber1: number[] = []
 let suit: number[] = []
 let IntroEnd = false
-Intro()
+IntroFunc()
 pauseUntil(() => IntroEnd)
 tiles.setCurrentTilemap(tilemap`level`)
 sprites.destroyAllSpritesOfKind(SpriteKind.Text, effects.none, 100)

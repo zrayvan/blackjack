@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const Camera = SpriteKind.create()
+    export const Text = SpriteKind.create()
 }
 // start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
 function runTurn (whichPlayer: number) {
@@ -90,8 +91,10 @@ function Intro () {
         `, SpriteKind.Camera)
     scene.cameraFollowSprite(CameraSprite)
     CameraSprite.setVelocity(15, 15)
-    Title = sprites.create(assets.image`TitleText`, SpriteKind.Player)
+    Title = sprites.create(assets.image`TitleText`, SpriteKind.Text)
     Title.setVelocity(15, 15)
+    TextIntro = sprites.create(assets.image`TitleText0`, SpriteKind.Text)
+    TextIntro.setVelocity(15, 15)
 }
 // scores the hand for the player
 function scoreHand () {
@@ -126,6 +129,8 @@ function dealerTurn () {
     }
     timeToEndGame = true
 }
+let TextIntro: Sprite = null
+let Title: Sprite = null
 let CameraSprite: Sprite = null
 let card = 0
 let whichSuit = 0
@@ -140,12 +145,11 @@ let cardNumber3: number[] = []
 let cardNumber2: number[] = []
 let cardNumber1: number[] = []
 let suit: number[] = []
-let Title: Sprite = null
 let IntroEnd = false
 Intro()
 pauseUntil(() => IntroEnd)
 tiles.setCurrentTilemap(tilemap`level`)
-sprites.destroy(Title, effects.none, 100)
+sprites.destroyAllSpritesOfKind(SpriteKind.Text, effects.none, 100)
 pause(200)
 music.play(music.createSong(hex`00b6000408040105001c000f0a006400f4010a00000400000000000000000000000000000000027e0000000c00010d0c001000010d10001400011414001800010d18001c00010a1c002200010824002c0001082c003000011130003800011238004000010f40004c00010d4c005000010d50005400011454005800010d58005c00010a5c006200010864006c0001086c007400010c74007800010878007c00010c7c008000010f`), music.PlaybackMode.LoopingInBackground)
 // this WALL of arrays look intimidating, but in reality all it does it set up the array for suits, and then creates an array up to 13 for each suit

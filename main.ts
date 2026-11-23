@@ -2,15 +2,32 @@ namespace SpriteKind {
     export const Camera = SpriteKind.create()
     export const Text = SpriteKind.create()
 }
+function checkForBusts () {
+    if (player1Score > 21) {
+        player1Score = 0
+        game.splash("Bust!")
+        endTurn = true
+    } else if (player2score > 21) {
+        player2score = 0
+        game.splash("Bust!")
+        endTurn = true
+    } else if (dealerScore > 21) {
+        dealerScore = 0
+        game.splash("Bust!")
+        timeToEndGame = true
+    }
+}
 // start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
 function runTurn (whichPlayer: number) {
     endTurn = false
     for (let index = 0; index < 2; index++) {
         drawCard()
     }
+    displayScore()
     while (!(endTurn)) {
         if (game.ask("Hit (A) or Stand (B)?")) {
             drawCard()
+            displayScore()
         } else {
             currentPlayerTurn += 1
             endTurn = true
@@ -163,16 +180,23 @@ function dealerTurn () {
     }
     timeToEndGame = true
 }
+function displayScore () {
+    if (currentPlayerTurn == 1) {
+        game.splash("P1 Score: " + player1Score)
+    } else if (currentPlayerTurn == 2) {
+        game.splash("P2 Score: " + dealerScore)
+    }
+}
 let TextIntro: Sprite = null
 let Title: Sprite = null
 let CameraSprite: Sprite = null
 let card = 0
 let whichSuit = 0
+let timeToEndGame = false
+let endTurn = false
 let dealerScore = 0
 let player2score = 0
 let player1Score = 0
-let timeToEndGame = false
-let endTurn = false
 let currentPlayerTurn = 0
 let cardNumber4: number[] = []
 let cardNumber3: number[] = []
@@ -256,5 +280,4 @@ cardNumber4 = [
 currentPlayerTurn = 1
 forever(function () {
     endGameIfAtEnd()
-    runTurn(currentPlayerTurn)
 })

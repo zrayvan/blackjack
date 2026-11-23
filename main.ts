@@ -18,32 +18,6 @@ function runTurn (whichPlayer: number) {
         dealerTurn()
     }
 }
-// checks for who wings by seeing if each player's score is higher than everyone else's; if it is, that player wins
-// if it gets to the end and and it hasnt chosen somebody, then it says its a tie
-function endGameIfAtEnd () {
-    if (timeToEndGame) {
-        game.setGameOverEffect(true, effects.confetti)
-        if (player1Score > player2score && (player1Score > player3score && (player1Score > player4Score && player1Score > dealerScore))) {
-            game.splash("Player 1 Wins!")
-            game.gameOver(true)
-        } else if (player2score > player1Score && (player2score > player3score && (player2score > player4Score && player2score > dealerScore))) {
-            game.splash("Player 2 Wins!")
-            game.gameOver(true)
-        } else if (player3score > player1Score && (player3score > player2score && (player3score > player4Score && player3score > dealerScore))) {
-            game.splash("Player 3 Wins!")
-            game.gameOver(true)
-        } else if (player4Score > player1Score && (player4Score > player2score && (player4Score > player3score && player4Score > dealerScore))) {
-            game.splash("Player 4 Wins!")
-            game.gameOver(true)
-        } else if (dealerScore > player1Score && (dealerScore > player2score && (dealerScore > player3score && dealerScore > player4Score))) {
-            game.splash("...The dealer won!", "Wow. That's pretty bad.")
-            game.gameOver(false)
-        } else {
-            game.splash("...It's a tie!", "Nobody wins!")
-            game.gameOver(false)
-        }
-    }
-}
 function drawCard () {
     whichSuit = suit._pickRandom()
     if (whichSuit == 1) {
@@ -114,15 +88,37 @@ function dealerTurn () {
         drawCard()
     }
     timeToEndGame = true
+    if (timeToEndGame) {
+        game.setGameOverEffect(true, effects.confetti)
+        if (player1Score > player2score && (player1Score > player3score && (player1Score > player4Score && player1Score > dealerScore))) {
+            game.splash("Player 1 Wins!")
+            game.gameOver(true)
+        } else if (player2score > player1Score && (player2score > player3score && (player2score > player4Score && player2score > dealerScore))) {
+            game.splash("Player 2 Wins!")
+            game.gameOver(true)
+        } else if (player3score > player1Score && (player3score > player2score && (player3score > player4Score && player3score > dealerScore))) {
+            game.splash("Player 3 Wins!")
+            game.gameOver(true)
+        } else if (player4Score > player1Score && (player4Score > player2score && (player4Score > player3score && player4Score > dealerScore))) {
+            game.splash("Player 4 Wins!")
+            game.gameOver(true)
+        } else if (dealerScore > player1Score && (dealerScore > player2score && (dealerScore > player3score && dealerScore > player4Score))) {
+            game.splash("...The dealer won!", "Wow. That's pretty bad.")
+            game.gameOver(false)
+        } else {
+            game.splash("...It's a tie!", "Nobody wins!")
+            game.gameOver(false)
+        }
+    }
 }
-let card = 0
-let whichSuit = 0
+let timeToEndGame = false
 let dealerScore = 0
 let player4Score = 0
 let player3score = 0
 let player2score = 0
 let player1Score = 0
-let timeToEndGame = false
+let card = 0
+let whichSuit = 0
 let endTurn = false
 let currentPlayerTurn = 0
 let cardNumber4: number[] = []
@@ -200,6 +196,8 @@ cardNumber4 = [
 ]
 currentPlayerTurn = 1
 forever(function () {
-    endGameIfAtEnd()
     runTurn(currentPlayerTurn)
+})
+game.onUpdateInterval(500, function () {
+	
 })

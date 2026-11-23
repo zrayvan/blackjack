@@ -1,9 +1,7 @@
 namespace SpriteKind {
     export const Camera = SpriteKind.create()
 }
-/**
- * start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
- */
+// start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
 function runTurn (whichPlayer: number) {
     endTurn = false
     for (let index = 0; index < 2; index++) {
@@ -71,7 +69,7 @@ function roundCardForScoring (cardNum: number) {
     }
 }
 function Intro () {
-    tiles.setCurrentTilemap(tilemap`level1`)
+    tiles.setCurrentTilemap(tilemap`TITLEBG`)
     CameraSprite = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -267,8 +265,8 @@ let suit: number[] = []
 let IntroEnd = false
 Intro()
 pauseUntil(() => IntroEnd)
-tiles.setCurrentTilemap(tilemap`level1`)
-pause(100)
+tiles.setCurrentTilemap(tilemap`level`)
+pause(200)
 music.play(music.createSong(hex`00b6000408040105001c000f0a006400f4010a00000400000000000000000000000000000000027e0000000c00010d0c001000010d10001400011414001800010d18001c00010a1c002200010824002c0001082c003000011130003800011238004000010f40004c00010d4c005000010d50005400011454005800010d58005c00010a5c006200010864006c0001086c007400010c74007800010878007c00010c7c008000010f`), music.PlaybackMode.LoopingInBackground)
 // this WALL of arrays look intimidating, but in reality all it does it set up the array for suits, and then creates an array up to 13 for each suit
 suit = [

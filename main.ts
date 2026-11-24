@@ -127,6 +127,11 @@ function dealerTurn () {
     }
     game.splash("Dealer Score: " + dealerScore)
     timeToEndGame = true
+    if (true) {
+    	
+    } else {
+    	
+    }
 }
 // when called, it displays the current player's score
 function displayScore () {

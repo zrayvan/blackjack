@@ -2,6 +2,12 @@ namespace SpriteKind {
     export const Camera = SpriteKind.create()
     export const Text = SpriteKind.create()
 }
+/**
+ * treat it nice, or else it will be give you nan for a score
+ * 
+ * (we dont know why)
+ */
+// checks if the  player busted, if they did then it splashes bust and moves on to the next turn
 function checkForBusts () {
     if (player1Score > 21) {
         player1Score = 0
@@ -10,14 +16,15 @@ function checkForBusts () {
     } else if (player2score > 21) {
         player2score = 0
         game.splash("Bust!")
-        currentPlayerTurn += 1
+        currentPlayerTurn = 3
+        dealerTurn()
     } else if (dealerScore > 21) {
         dealerScore = 0
         game.splash("Bust!")
         timeToEndGame = true
     }
 }
-// start from the forever, then down the left column and afterwards read the right column downwards to read the program sequentially.
+// runs the turn; draws two card, splashes the score, and then asks the user to hit or stand. hitting draws a card, displays the score and then checks for busts, while standing gives the next player their turn
 function runTurn () {
     endTurn = false
     for (let index = 0; index < 2; index++) {
@@ -35,10 +42,11 @@ function runTurn () {
         }
     }
 }
+// ends the intro when a is pressed
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     IntroEnd = true
 })
-// checks for who wings by seeing if each player's score is higher than everyone else's; if it is, that player wins
+// checks for who wins by seeing if each player's score is higher than everyone else's; if it is, that player wins
 // if it gets to the end and and it hasnt chosen somebody, then it says its a tie
 function endGameIfAtEnd () {
     if (timeToEndGame) {
@@ -58,6 +66,7 @@ function endGameIfAtEnd () {
         }
     }
 }
+// =simulates a deck of cards using the array from the start; picks a random element from each array and removes it. before moving onto scoring the card
 function drawCard () {
     whichSuit = suit._pickRandom()
     if (whichSuit == 1) {
@@ -84,7 +93,7 @@ function roundCardForScoring (cardNum: number) {
         card = cardNum - 3
     }
 }
-// scores the hand for the player
+// scores the hand for each player; aces are forced to hard if score is under 10
 function scoreHand () {
     // checks for which player, and then checks if the card is an ace. if yes, and an 11 would not cause the player to bust, it adds 11 to their score. otherwise, it adds the card's now rounded down score to their score. repeat this for each player and the dealer and you get this wall of if statemenets
     if (currentPlayerTurn == 1) {
@@ -119,6 +128,7 @@ function dealerTurn () {
     game.splash("Dealer Score: " + dealerScore)
     timeToEndGame = true
 }
+// when called, it displays the current player's score
 function displayScore () {
     if (currentPlayerTurn == 1) {
         game.splash("P1 Score: " + player1Score)
@@ -128,6 +138,7 @@ function displayScore () {
     	
     }
 }
+// creates the intro screen
 function IntroFunc () {
     tiles.setCurrentTilemap(tilemap`TITLEBG`)
     CameraSprite = sprites.create(img`
@@ -150,45 +161,14 @@ function IntroFunc () {
         `, SpriteKind.Camera)
     scene.cameraFollowSprite(CameraSprite)
     CameraSprite.setVelocity(15, 15)
-    Title = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Text)
+    Title = sprites.create(assets.image`TitleText`, SpriteKind.Text)
     Title.setVelocity(15, 15)
-    TextIntro = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Text)
+    Title.setPosition(80, 55)
+    TextIntro = sprites.create(assets.image`TitleText0`, SpriteKind.Text)
     TextIntro.setVelocity(15, 15)
+    TextIntro.setPosition(80, 70)
 }
+// starts the intro, then after creates the main background and starts the song, creates the deck (which is the massive list of arrays) and then sets the player turn to 1
 let TextIntro: Sprite = null
 let Title: Sprite = null
 let CameraSprite: Sprite = null
@@ -280,6 +260,7 @@ cardNumber4 = [
 13
 ]
 currentPlayerTurn = 1
+// main loop of the game: if checks if the game is ready to end, and if not, runs the turn, and afterwards if it's the dealer's turn, then it goes to the dealer's turn
 forever(function () {
     endGameIfAtEnd()
     runTurn()

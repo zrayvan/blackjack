@@ -3,7 +3,9 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "multiplayer": "*"
+        "multiplayer": "*",
+        "blackjack extension": "pub:61166-53145-16633-21054",
+        "blackjack ending": "pub:83481-53703-47118-26883"
     },
     "files": [
         "main.blocks",
